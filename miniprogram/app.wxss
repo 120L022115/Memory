@@ -1,0 +1,349 @@
+/* 引入 weui 组件 */
+@import './miniprogram_npm/weui-miniprogram/weui-wxss/dist/style/weui.wxss';
+@import './icon/iconfont.wxss';
+
+page {
+  --footer-height: 10vh;
+  --button-size: 16vw;
+  --button-color: #353535;
+  --button-icon-size: 6vw;
+}
+
+page {
+  background: #f6f6f6;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+button {
+  background: initial;
+}
+
+button:focus {
+  outline: 0;
+}
+
+button::after {
+  border: none;
+}
+
+.form-group {
+  width: calc(100% - 3vw);
+  margin: 1vw 1.5vw;
+  border-radius: 10px;
+  background: white;
+}
+
+.form-group_label {
+  display: flex;
+  align-self: flex-start;
+  color: #8D8D8D;
+  font-size: 6vw;
+}
+
+.form-group_label:not(:first-child) {
+  margin-top: 20px;
+}
+
+.form-cell {
+  padding: 2vw 2vw;
+}
+
+.form-cell:not(:last-child) {
+  border-bottom: rgba(0, 0, 0, 0.05) solid 1px;
+}
+
+.form-cell.inline {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+
+.toolbar{
+  position: fixed;
+  bottom: 0;
+  z-index: 9999;
+  width: 100vw;
+  height: 10vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+.linevcenter{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+
+.MODEL {
+  background: rgb(0, 0, 0, 0.5);
+  position: fixed;
+  z-index: 99999;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.MODELbtn {
+  width: 36vw !important;
+  margin: 2vw !important;
+  font-size: 4vw !important;
+}
+
+.MODELtitle {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  height: 10vw;
+  line-height: 10vw;
+  font-weight: 700;
+  font-size: 6vw;
+  margin: 2vw 0;
+}
+
+.MODELrow {
+  display: flex;
+  justify-content: space-around;
+}
+
+.MODELchild {
+  position: fixed;
+  display: block;
+  border-radius: 2vw;
+  padding: 2vw;
+  opacity: 1;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 95vw;
+}
+
+.MODELchildimg {
+  position: fixed;
+  display: block;
+
+  border-radius: 1vw;
+  padding: 0vw;
+  justify-content: center;
+}
+
+.MODELtext {
+  text-align: left;
+  height: 50vh;
+  overflow-y: scroll;
+  word-break: break-all;
+  overflow-x: hidden;
+  white-space: pre-wrap;
+  font-size: 4vw;
+  justify-content: center;
+  display: block;
+  margin: 3vw;
+}
+
+.MODELblock {
+
+  justify-content: center;
+  text-align: center;
+  display: block;
+  margin: 3vw;
+}
+
+.MODELpicker {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  border-radius: 2vw;
+  padding-left: 2vw;
+  padding-right: 2vw;
+  line-height: 6vw;
+  font-size: 4vw;
+  height: 8vw;
+}
+
+.MODELinput {
+  text-align: left;
+  border-radius: 2vw;
+  padding-left: 2vw;
+  padding-right: 2vw;
+  line-height: 6vw;
+  font-size: 4vw;
+  height: 8vw;
+}
+
+.FORM {
+  display: block;
+  padding: 3vw 0;
+  font-size: 4vw;
+  color: black;
+}
+
+.FORMheadline {
+  font-weight: 800;
+  white-space: pre-wrap;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  display: flex;
+  font-size: 8vw;
+  line-height: 8vw;
+  padding: 1vw 0;
+  align-items: center;
+  justify-content: left;
+  text-align: left;
+}
+
+.FORMitem {
+  padding: 1vw 0vw 1vw 3vw;
+  display: block;
+}
+
+.FORMblock {
+  display: flex;
+  flex-direction: column;
+}
+
+.FORMline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.FORMlineright {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  text-align: right;
+  word-break: break-all;
+}
+
+.FORMlineleft {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  text-align: left;
+}
+.FORMflow {
+  text-align: center;
+  display: flex;
+  align-content: space-between;
+	flex-flow: row;
+  padding: 2vw;
+}
+
+.FORMbtnline {
+  margin: 1vw !important;
+  padding: 1vw;
+  line-height: 8vw;
+  font-size: 4vw;
+  font-weight: 700;
+  width: 90vw !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.FORMbtnright {
+  margin: 0 1vw;
+  padding: 1vw;
+  line-height: 8vw;
+  font-size: 4vw;
+  font-weight: 800;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.FORMtextline {
+  font-size: 4vw;
+  display: inline;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  line-height: 5vw;
+}
+
+.FORMtext {
+  font-size: 4vw;
+  display: flex;
+  text-align: start;
+  align-items: center;
+  justify-content: start;
+  line-height: 6vw;
+}
+
+.slideIcon::before{
+  margin-right: 1vw;
+}
+.targetClassChoose{
+  margin: 2.5vw 4vw 1vw 4vw;
+  border-radius: 3vw;
+  padding: 2vw 4vw;
+  display: flex;
+  justify-content: space-between;
+}
+
+.targetClassPicker{
+  width: 50vw;
+  text-align: right;
+  border-radius: 3vw;
+  padding: 0 3vw;
+}
+
+.coloricon{
+  width: 6vw;
+  height: 6vw;
+  min-width: 6vw;
+  border-radius: 6vw;
+  margin: 1vw 1vw 0 0;
+  font-size: 4vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: 700;
+  border: 0 solid black;
+}
+
+.todo-info {
+  width: auto;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column
+}
+
+.todo-info_title {
+  font-size: 5vw;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.todo-info_desc {
+  font-size: 3.4vw;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.starIcon{
+  margin-top: 2vw;
+  width: 4vw;
+  height: 4vw;
+  min-width: 4vw;
+  border-radius: 10vw;
+}

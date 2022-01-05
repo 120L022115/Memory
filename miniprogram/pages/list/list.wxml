@@ -1,0 +1,145 @@
+<wxs module="util" src="../util.wxs" />
+
+<view class="MODEL" wx:if="{{showAddModel}}">
+  <view class="MODELchild" style="top: 20vw;min-width: 85vw; background-color: #FAFAFA">
+    <view class="MODELtitle">
+      <text style="color: rgb(56, 175, 255)">从词典快速添加</text>
+    </view>
+    <view style="font-size: 4vw;justify-content: center;display: flex;margin-bottom: 2vw;">
+      <text style="color: black">当前词典：默认英汉词典</text>
+    </view>
+    <input style="color: black;background-color: #CACACA;" class="MODELinput" placeholder="请输入要搜索的单词" id="input" bindinput="wordQuery" placeholder-style="color: #AAAAAA" auto-focus />
+
+    <block wx:if="{{wordlist.length > 0}}">
+      <scroll-view scroll-y="true" style="margin-top: 1vw;font-size: 4vw;max-height: 70vh">
+        <view class="TABLE2" style="padding: 0;color: black;">
+          <view wx:for="{{wordlist}}" wx:key="{{item.value}}">
+            <view class="FORMitem FORMline" style="width: 85vw;background-color:{{wordChoose==index?'#88ada6':(index%2==0?'#e3f9fd':'#d6ecf0')}};justify-content:space-between;padding-left:1vw;padding-right:1vw;margin-top:2px;margin-bottom:0px" bindtap="wordQuery" data-index="{{index}}" id="choose">
+              <view class="TABLE2block tabletext" style="color:{{wordChoose==index?'black':'black'}} !important">{{item.word}}</view>
+              <view class="TABLE2block tabletext" style="color:{{wordChoose==index?'black':'black'}} !important">{{item.tranall}}</view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </block>
+    <block wx:else>
+      <view class="MODELblock">
+        <text class="FORMtextline" style="color: black;">输入发起搜索或当前搜索结果为空</text>
+      </view>
+    </block>
+    <view class="MODELrow">
+      <button style="background-color: white;color:black" class="addmbtn MODELbtn iconfont icon-cuo" id="cancel" bindtap="wordQuery"></button>
+      <button style="background-color: #16a951;color: white" class="addmbtn MODELbtn iconfont icon-duihao" id="apply" bindtap="wordQuery"></button>
+    </view>
+
+  </view>
+</view>
+
+<view style="display: block;" class="topbar">
+  <view class="linevcenter" style="min-width: 100vw;width:100vw;padding: 10vw 0vw 2vw 6vw;background-color: rgb(56, 175, 255);">
+    <view class="form-group_label" style="color: white;">
+      <view class="iconfont icon-fenlei" style="font-size: 6vw;margin-right: 2vw;" bindtap="goEditClass"></view>
+      <picker disabled="{{onEdit}}" mode="selector" range="{{classNameList}}" bindchange="selectClassBtn">{{classNameList[classIdSelected]}}</picker>
+      <mp-badge extStyle="font-size:4vw;background-color:{{classColor?classColor:'#4d98ec'}}" content="{{class[classNameList[classIdSelected]].length}}" style="margin-left: 5px;" />
+    </view>
+  </view>
+
+  <view wx:if="{{!onEdit}}" class="linevcenter" style="background-color: white;display: flex;text-align: right;align-items: center;justify-content: space-between;padding: 2vw 6vw 2vw 6vw;">
+    <view style="display: flex;">
+      <view class="toolicon iconfont icon-shuaxin" data-show="{{false}}" bindtap="goRefresh"></view>
+      <view class="toolicon iconfont icon-chakan" data-show="{{true}}" bindtap="goRefresh"></view>
+    </view>
+    <view style="display: flex;">
+      <view class="toolicon iconfont icon-bangzhu" id="help" bindlongpress="showHelp" bindtap="showHelp"> </view>
+      <view style="color: {{showTip?'rgb(56,175,255)':'black'}};" bindtap="changeShowTip">
+        <view style="font-size: 6.2vw;" class="toolicon iconfont icon-tishi"></view>
+      </view>
+      <view style="color: {{showTime?'rgb(56,175,255)':'black'}};" bindtap="changeShowTime">
+        <view class="toolicon iconfont icon-shijian"></view>
+      </view>
+      <view class="toolicon iconfont icon-icon-" bindtap="goMoveMode"> </view>
+      <view class="toolicon iconfont icon-biaoji" bindtap="goStarMode"> </view>
+    </view>
+  </view>
+  <view class="linevcenter" style="background-color: white;display: flex;text-align: right;align-items: center;justify-content: flex-start;padding: 2vw 6vw 2vw 6vw;" wx:if="{{onEditColor}}">
+    <!--<view style="font-weight: 800;color: {{colors[colorChoosedId]?colors[colorChoosedId]:'black'}};" class="toolicon iconfont icon-biaoji"></view>-->
+    <view style="font-size: 4vw;margin-right: 2vw;">选择标记颜色</view>
+    <view wx:for="{{colors}}" wx:for-index="index" data-index="{{index}}" class="coloricon" style="background-color: {{item}};border: {{index==colorChoosedId?3:1}}px solid #CCCCCC;" bindtap="changeColor"></view>
+  </view>
+  <view class="linevcenter" style="background-color: white;display: flex;text-align: right;align-items: center;justify-content: space-between;padding: 2vw 4vw 2vw 6vw;" wx:if="{{onEditMove}}">
+    <view style="font-size: 4vw;">{{MoveOptionText[MoveOption]}}</view>
+    <view style="display: flex;">
+      <view class="toolicon iconfont icon-xiayi" data-index="0" bindtap="changeMoveOption"></view>
+      <view class="toolicon iconfont icon-zhidi" data-index="1" bindtap="changeMoveOption"></view>
+      <view class="toolicon iconfont icon-shanchu" data-index="2" bindtap="changeMoveOption"></view>
+      <view class="toolicon iconfont icon-jianqie" data-index="3" bindtap="changeMoveOption"></view>
+      <view class="toolicon iconfont icon-fuzhiwenjian" data-index="4" bindtap="changeMoveOption"></view>
+      <view class="toolicon iconfont icon-paixu" data-index="5" bindtap="changeMoveOption"></view>
+      <view class="toolicon iconfont icon-shijianpaixu" data-index="6" bindtap="changeMoveOption"></view>
+      <view class="toolicon iconfont icon-nishizhencounterclockwise6" data-index="7" bindtap="changeMoveOption"></view>
+    </view>
+
+  </view>
+</view>
+<view wx:if="{{onEditMove && (MoveOption == 4|| MoveOption==3)}}" class="targetClassChoose" style="background-color: white;">
+  <view style="font-size: 4vw;">
+    目标分类
+  </view>
+  <picker style="background-color: #DDDDDD;" class="targetClassPicker" mode="selector" range="{{classNameList}}" bindchange="selectTargetClassBtn">
+    <view style="font-size: 4vw;display: flex;justify-content: flex-end;">
+      <view style="white-space: nowrap;overflow-x: scroll;">{{classNameList[targetClassSelected]}} </view>
+      <view style="margin-left: 1vw;" class="iconfont icon-xiala"></view>
+    </view>
+  </picker>
+</view>
+<scroll-view scroll-y="true" class="midlist">
+  <view style="justify-content: center;align-items: center;text-align: center;" wx:if="{{class[classNameList[classIdSelected]].length === 0}}">
+    <image class="background" src="../../images/list/background.png" mode="aspectFit" />
+    <view class="title">暂无记忆</view>
+    <view class="subtitle">有想法？赶紧记下来吧！</view>
+  </view>
+  <view style="width: 95vw;margin-bottom: 25vh;" wx:if="{{class[classNameList[classIdSelected]].length > 0}}">
+    <view class="form-group" wx:if="{{class[classNameList[classIdSelected]].length > 0}}">
+      <view class="form-cell" wx:for="{{class[classNameList[classIdSelected]]}}" wx:key="index">
+        <mp-slideview buttons="{{slideButtons}}" data-index='{{index}}' bindbuttontap="slideButtonTap">
+          <view class="slide">
+            <view style="display: flex;" class="slideleft">
+              <!--置顶按钮-->
+              <view wx:if="{{onEditMove && MoveOption==1}}" class="slidetoolicon iconfont icon-zhiding" style="font-size: 5vw;color: {{item.color?'white':'black'}};background-color: {{item.color?item.color:'#DDDDDD'}};" data-index='{{index}}' data-up="{{true}}" bindtap="dealMoveOption" />
+              <!--上移按钮-->
+              <view wx:if="{{onEditMove && MoveOption==0}}" class="slidetoolicon iconfont icon-shangyi" style="font-size: 5vw;color: {{item.color?'white':'black'}};background-color: {{item.color?item.color:'#DDDDDD'}};" data-index='{{index}}' data-up="{{true}}" bindtap="dealMoveOption" />
+              <!--标记标签-->
+              <view wx:if="{{!onEdit}}" class="starIcon" style="{{onEditColor ? 'border: 1px solid #666': ''}};background-color: {{item.color?item.color:';'}};" data-index='{{index}}' bindtap="colorNote" />
+              <view class="todo-info" bindtap="toDetailPage" data-index="{{index}}">
+                <view class="todo-info_title {{item.extStyleClass}}" style="color: {{item.color?item.color:'black'}};">{{item.showtitle}}</view>
+                <view wx:if="{{showTip}}" class="todo-info_desc" style="color: #aDaDaD;">{{classNameList[classIdSelected]==DEFAULTCLASSNAME? '['+class[item.title].length+'项] '+item.split.l+item.split.m+item.split.r+" ":''}}{{item.tip}}</view>
+                <view wx:if="{{showTime}}" class="todo-info_desc" style="color: #aDaDaD;">{{item.realtime}}</view>
+              </view>
+
+            </view>
+            <!--标记按钮-->
+            <view wx:if="{{onEditColor}}" class="slidetoolicon iconfont {{colors[colorChoosedId]==item.color?'icon-quxiaobiaoji':'icon-biaoji'}}" style="font-size: 5vw;color: {{item.color?'white':'black'}};border: 3px solid {{colors[colorChoosedId]==item.color?'#DDDDDD':(colors[colorChoosedId]?colors[colorChoosedId]:'white')}};background-color: {{item.color?item.color:'#DDDDDD'}};" data-index='{{index}}' bindtap="colorNote" />
+            <!--移动按钮-->
+            <view wx:if="{{onEditMove && MoveOption==3}}" class="slidetoolicon iconfont icon-jianqie" style="font-size: 5vw;color: {{item.color?'white':'black'}};background-color: {{item.color?item.color:'#DDDDDD'}};" data-index='{{index}}' bindtap="dealMoveOption" />
+            <!--复制按钮-->
+            <view wx:if="{{onEditMove && MoveOption==4}}" class="slidetoolicon iconfont icon-fuzhiwenjian" style="font-size: 5vw;color: {{item.color?'white':'black'}};background-color: {{item.color?item.color:'#DDDDDD'}};" data-index='{{index}}' bindtap="dealMoveOption" />
+            <!--删除按钮-->
+            <view wx:if="{{onEditMove && MoveOption==2}}" class="slidetoolicon iconfont icon-shanchu" style="font-size: 5vw;color: {{item.color?'white':'black'}};background-color: {{item.color?item.color:'#DDDDDD'}};" data-index='{{index}}' bindtap="dealMoveOption" />
+            <!--下移按钮-->
+            <view wx:if="{{onEditMove && MoveOption==0}}" class="slidetoolicon iconfont icon-xiayi" style="font-size: 5vw;color: {{item.color?'white':'black'}};background-color: {{item.color?item.color:'#DDDDDD'}};" data-index='{{index}}' data-up="{{false}}" bindtap="dealMoveOption" />
+            <!--置底按钮-->
+            <view wx:if="{{onEditMove && MoveOption==1}}" class="slidetoolicon iconfont icon-zhidi" style="font-size: 5vw;color: {{item.color?'white':'black'}};background-color: {{item.color?item.color:'#DDDDDD'}};" data-index='{{index}}' data-up="{{false}}" bindtap="dealMoveOption" />
+            <!--更新时间按钮-->
+            <view wx:if="{{onEditMove && MoveOption==7}}" class="slidetoolicon iconfont icon-nishizhencounterclockwise6" style="font-size: 5vw;color: {{item.color?'white':'black'}};background-color: {{item.color?item.color:'#DDDDDD'}};" data-index='{{index}}' data-up="{{false}}" bindtap="dealMoveOption" />
+          </view>
+        </mp-slideview>
+      </view>
+    </view>
+  </view>
+  <!--<footer></footer>-->
+</scroll-view>
+<view class="endbar" style="background-color: #d6ecf0;color: #88ada6;font-size: 4vw;">
+  <view wx:if="{{!onEdit}}" class="iconfont icon-ziliaoku" style="font-size: 6vw;" id="ziliaoku" bindtap="goPage"/>
+  <view class="tianjiabtn iconfont {{onEdit? 'icon-baocun' : 'icon-tianjia'}}" style="font-size: 8vw;  color: white;background-color:{{onEdit? '#40de5a' : 'rgb(68, 187, 255)'}} ;" bindtap="addNoteBtn" bindlongpress="addNoteBtnQuick" />
+  <view wx:if="{{!onEdit}}" class="iconfont icon-wodedamaijihuo" style="font-size: 6vw;" id="wode" bindtap="goPage"/>
+</view>

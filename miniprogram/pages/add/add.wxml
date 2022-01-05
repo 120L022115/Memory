@@ -1,0 +1,140 @@
+<wxs module="util" src="../util.wxs" />
+
+
+<view class="MODEL" wx:if="{{showAddModel}}">
+  <view class="MODELchild" style="top: 20vw;min-width: 85vw; background-color: #FAFAFA">
+    <view class="MODELtitle">
+      <text style="color: rgb(56, 175, 255)">从词典快速添加</text>
+    </view>
+    <view style="font-size: 4vw;justify-content: center;display: flex;margin-bottom: 2vw;">
+      <text style="color: black">当前词典：默认英汉词典</text>
+    </view>
+    <input style="color: black;background-color: #CACACA;" class="MODELinput" placeholder="请输入要搜索的单词" id="input" bindinput="wordQuery" placeholder-style="color: #AAAAAA" auto-focus />
+
+    <block wx:if="{{wordlist.length > 0}}">
+      <scroll-view scroll-y="true" style="margin-top: 1vw;font-size: 4vw;max-height: 70vh">
+        <view class="TABLE2" style="padding: 0;color: black;">
+          <view wx:for="{{wordlist}}" wx:key="{{item.value}}">
+            <view class="FORMitem FORMline" style="width: 85vw;background-color:{{wordChoose==index?'#88ada6':(index%2==0?'#e3f9fd':'#d6ecf0')}};justify-content:space-between;padding-left:1vw;padding-right:1vw;margin-top:2px;margin-bottom:0px" bindtap="wordQuery" data-index="{{index}}" id="choose">
+              <view class="TABLE2block tabletext" style="color:{{wordChoose==index?'black':'black'}} !important">{{item.word}}</view>
+              <view class="TABLE2block tabletext" style="color:{{wordChoose==index?'black':'black'}} !important">{{item.tranall}}</view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </block>
+    <block wx:else>
+      <view class="MODELblock">
+        <text class="FORMtextline" style="color: black;">输入发起搜索或当前搜索结果为空</text>
+      </view>
+    </block>
+    <view class="MODELrow">
+      <button style="background-color: white;color:black" class="addmbtn MODELbtn iconfont icon-cuo" id="cancel" bindtap="wordQuery"></button>
+      <button style="background-color: #16a951;color: white" class="addmbtn MODELbtn iconfont icon-duihao" id="apply" bindtap="wordQuery"></button>
+    </view>
+
+  </view>
+</view>
+
+<view class="addform">
+  <view class="addform-group">
+    <view class="selectline form-cell">
+      <view class="form-cell_title">目标分类</view>
+      <view>
+        <picker disabled="{{Edit}}" style="background-color: #DDDDDD;" class="targetClassPicker" mode="selector" range="{{classNameList}}" bindchange="selectTargetClassBtn">
+          <view style="font-size: 4vw;display: flex;justify-content: flex-end;">
+            <view style="white-space: nowrap;overflow-x: scroll;">{{classNameList[targetClassSelected]}} </view>
+            <view style="margin-left: 1vw;" class="iconfont icon-xiala"></view>
+          </view>
+        </picker>
+        <view wx:if="{{Edit}}" class="iconfont icon-tishi" style="font-size: 3.5vw;color: coral;"> 正在编辑项目，分类不可选择</view>
+        <view wx:if="{{!Edit && DEFAULTCLASSNAME==classNameList[targetClassSelected]}}" class="iconfont icon-tishi" style="font-size: 4vw;color: coral;"> 将添加为分类</view>
+      </view>
+
+    </view>
+    <view wx:if="{{!Edit}}" class="selectline form-cell">
+      <view class="form-cell_title" style="display: flex;">添加到最底部<view class="iconfont icon-tishi" style="font-size: 4vw;margin-left: 1vw;" bindtap="showTip" id="顶部"></view>
+      </view>
+
+      <switch class="FORMswitch" checked="{{PutBottom}}" color="{{colors[colorChoosedId]?colors[colorChoosedId]:'#555555'}}" bindchange="changeBottom" />
+    </view>
+  </view>
+  <view wx:if="{{DEFAULTCLASSNAME!=classNameList[targetClassSelected]}}" class="addform-group">
+    <view class="form-cell selectline" bindtap="wordQuery" id="open">
+      <view class="form-cell_title">从词典填充</view>
+      <view style="font-size: 5vw;" class="iconfont icon-xiayiyeqianjinchakangengduo"></view>
+    </view>
+  </view>
+  <view class="addform-group">
+    <view class="form-cell">
+      <view class="selectline">
+        <view class="form-cell_title">项目标题</view>
+        <view class="iconfont icon-tishi" style="font-size: 3.5vw;color: coral;" wx:if="{{Edit && DEFAULTCLASSNAME==classNameList[targetClassSelected]}}"> 暂无法变更分类标题，如需请重新添加</view>
+        <view style="font-size: 3.5vw;display: flex;align-items: center;" wx:if="{{DEFAULTCLASSNAME!=classNameList[targetClassSelected]}}">
+          当前分类遮盖标记
+          <view class="coloricon" style="z-index: 9999;margin: 0 0 0 1vw ;font-size: 3.5vw;background-color:#EEEEEE;border: 1px solid #CCCCCC;color:black;" bindtap="putInDiv">{{split.l+split.m+split.r}}</view>
+        </view>
+      </view>
+      <textarea maxlength="-1" 	auto-height="true" disabled="{{Edit && DEFAULTCLASSNAME==classNameList[targetClassSelected]}}" class="form-cell_input" placeholder="请输入项目标题" placeholder-class="form-cell_title-placeholder" bindinput="NoteInput" id="title" value="{{NoteData.title}}" />
+    </view>
+    <view class="form-cell">
+      <view class="form-cell_title">项目提示</view>
+      <textarea maxlength="-1" 	auto-height="true" class="form-cell_input" placeholder="请输入项目提示" placeholder-class="form-cell_title-placeholder" bindinput="NoteInput" id="tip" value="{{NoteData.tip}}" />
+    </view>
+  </view>
+  <!--
+  <view class="form-group">
+    <view class="form-cell inline">
+      <view>添加附件</view>
+      <view class="upload-text" bindtap="addFile">
+        {{(files.length === 0 ? "点击添加附件" : util.filterStr(fileName, 15))}}
+      </view>
+      <image class="upload" bindtap="addFile" src="../../images/add/next.png"></image>
+    </view>
+  </view>-->
+  <view class="addform-group">
+    <view class="form-cell selectline">
+      <view>颜色标记</view>
+      <view class="selectline">
+        <view wx:for="{{colors}}" wx:for-index="index" data-index="{{index}}" class="coloricon {{index==colorChoosedId?' iconfont icon-duihao':''}}" style="background-color: {{item}};border: {{index==colorChoosedId?3:1}}px solid #CCCCCC; color: {{colors[colorChoosedId]?'white':'black'}};" bindtap="changeColor" id="color"></view>
+      </view>
+    </view>
+    <view class="form-cell selectline">
+      <view>图标标记</view>
+      <view class="iconsline">
+        <view wx:for="{{icons}}" wx:for-index="index" data-index="{{index}}" class="coloricon iconfont {{item}}" style="background-color:{{index==iconChoosedId?'#666666':'#EEEEEE'}} ;border: 1px solid #CCCCCC; color:{{index==iconChoosedId?'white':'black'}};" bindtap="changeColor" id="icon"></view>
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{DEFAULTCLASSNAME==classNameList[targetClassSelected]}}" class="addform-group">
+    <view class="form-cell selectline">
+      <view>遮盖标记</view>
+      <view bindtap="showTip" id="分割标记" style="font-size: 4vw;" class="iconfont icon-tishi"></view>
+      <view class="selectline">
+        <input class="strinput" placeholder="左" placeholder-class="form-cell_title-placeholder" bindinput="NoteInput" id="split.l" value="{{NoteData.split.l}}" />
+        <input class="strinput" placeholder="中" placeholder-class="form-cell_title-placeholder" bindinput="NoteInput" id="split.m" value="{{NoteData.split.m}}" />
+        <input class="strinput" placeholder="右" placeholder-class="form-cell_title-placeholder" bindinput="NoteInput" id="split.r" value="{{NoteData.split.r}}" />
+      </view>
+    </view>
+  </view>
+
+  <view class="addform-group">
+    <view class="form-cell">
+      <view class="form-cell_title">预览效果 （第{{NoteData.showcount}}/{{NoteData.countmax}}次点击）</view>
+    </view>
+    <view class="form-cell" style="display: flex;">
+      <view class="starIcon" style="background-color: {{NoteData.color?NoteData.color:';'}};" />
+      <view class="todo-info" bindtap="showNext">
+        <view class="todo-info_title iconfont slideIcon {{NoteData.extStyleClass}}" style="color: {{NoteData.color?NoteData.color:'black'}};">{{NoteData.showtitle}}</view>
+        <view class="todo-info_desc" style="color: #aDaDaD;">{{NoteData.tip}}</view>
+        <view class="todo-info_desc" style="color: #aDaDaD;">{{NoteData.realtime}}</view>
+      </view>
+    </view>
+  </view>
+  <view style="margin: 30vh;"></view>
+
+</view>
+<view class="footer">
+  <view class="reset" bindtap="updatePreView">刷新预览效果</view>
+  <view class="save" style="background-color: {{colors[colorChoosedId]}};" bindtap="saveTodo">保存</view>
+</view>
