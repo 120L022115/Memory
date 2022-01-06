@@ -314,34 +314,7 @@ Page({
       that.data.goExAdd = false
       this.updateNoteArea(that.data.classNameList[that.data.classIdSelected] == g.DEFAULTCLASSNAME)
     }
-    /*setTimeout(() => {
-      wx.navigateTo({
-        url: '../mine/mine',
-      })  
-    }, 500);
-    */
-
-    /*
-    // 通过云函数调用获取用户 _openId
-    //getApp().getOpenId()
-    // 根据 _openId 数据，查询并展示待办列表
-    const db = getApp().db()
-    db.collection(getApp().globalData.collection).where({
-      _openid: openid
-    }).get().then(res => {
-      const {
-        data
-      } = res
-      // 存储查询到的数据
-      this.setData({
-        // data 为查询到的所有待办事项列表
-        todos: data,
-        // 通过 filter 函数，将待办事项分为未完成和已完成两部分
-        pending: data.filter(todo => todo.freq === 0),
-        finished: data.filter(todo => todo.freq === 1)
-      })
-    })
-    */
+    
   },
   goEditClass(e) { //去管理分类
     if (this.data.onEdit) return
@@ -690,43 +663,7 @@ Page({
 
 
     return
-    //const db = await getApp().database()
-    // 处理星标按钮点击事件
-    if (index === 0) {
-      // 根据待办的 _id 找到并反转星标标识
-      /*db.collection(getApp().globalData.collection).where({
-        _id: todo._id
-      }).update({
-        data: {
-          star: !todo.star
-        }
-      })*/
-      // 更新本地数据，触发显示更新
-      todo.star = !todo.star
-      this.setData({
-        pending: this.data.pending
-      })
-    }
-    // 处理删除按钮点击事件
-    if (index === 1) {
-      // 根据待办的 _id 找到并删除待办记录
-      /*db.collection(getApp().globalData.collection).where({
-        _id: todo._id
-      }).remove()*/
-      // 更新本地数据，快速更新显示
-      this.data.pending.splice(todoIndex, 1)
-      this.setData({
-        pending: this.data.pending
-      })
-      // 如果删除完所有事项，刷新数据，让页面显示无事项图片
-      if (this.data.pending.length === 0 && this.data.finished.length === 0) {
-        this.setData({
-          todos: [],
-          pending: [],
-          finished: []
-        })
-      }
-    }
+    
   },
 
   // 点击左侧单选框时，切换待办状态
