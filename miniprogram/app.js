@@ -5,6 +5,10 @@ var f
 import {
   examarr
 } from './data/exampleclass.js'
+var VERSION ={
+  text: 'Ver.0.1.1  Initial Commit',
+  ver: 'MiniProgram.Ver.0.1.1 Beta'
+}
 var DEFAULTCLASSNAME = "管理分类"
 var DELETECLASSNAME = "已删除"
 var DEFAULTSPLIT = {
@@ -16,6 +20,7 @@ var DEFAULTCOLORS = ['#dc3023', '#e29c45', '#0c8918', '#808080', '#8d4bbb', '#44
 var DEFAULTICONS = ['icon-jianqie', 'icon-fuzhiwenjian', 'icon-ziliaoku', 'icon-tishi', 'icon-shijian', 'icon-xiala', 'icon-fenlei', 'icon-nishizhencounterclockwise6', 'icon-jinzhi', 'icon-tianjia', 'icon-baocun', 'icon-xiayiyeqianjinchakangengduo', 'icon-zhiding', 'icon-wodedamaijihuo', 'icon-icon-', 'icon-chakan', 'icon-duihao', 'icon-yunduanshuaxin', 'icon-paixu', 'icon-xiayi', 'icon-shangyi', 'icon-biaoji', 'icon-shanchu', 'icon-bianji', 'icon-shuaxin', 'icon-quxiaobiaoji', 'icon-star-full', 'icon-star', 'icon-cuo', 'icon-shijianpaixu', 'icon-zhidi']
 App({
   globalData: {
+    VERSION: VERSION,
     tmp_editNoteData: undefined,
     colors: DEFAULTCOLORS,
     DEFAULTICONS: DEFAULTICONS,
@@ -28,20 +33,48 @@ App({
       split: DEFAULTSPLIT
     }
   },
+  exportClass(classname) {
+    var o = g.class[classname]
+    var keys = [],
+      tar, key
+    var str = ''
+    for (var i in o) {
+      tar = o[i]
+      //keys = Object.keys(tar)
+      str += '/c<' + tar.title + '>c/ '
+      str += '/i<' + tar.tip + '>i/ '
+      str += '/t<' + tar.time + '>t/ '
+      //str += '/t<'+tar.time+'>t/ '
+      //str += '/t<'+tar.time+'>t/ '
+      /*for(var j in keys){
+        key = keys[j]
+        if(key=='title') continue
+        if(key=='tip') continue
+        if(key=='time') continue
+      }*/
+    }
+    return str.replace(/\n/g, "\\n")
+  },
   importFromArr(classname, arr) {
-    var arr = arr,succ = 0;
+    var arr = arr,
+      succ = 0;
     wx.showLoading({
       title: '加载中',
     })
-    if(classname == g.DEFAULTCLASSNAME) return false
+    if (classname == g.DEFAULTCLASSNAME) return false
     for (var i in arr) {
-      if(app.addNote({
-        classname: classname,
-        title: arr[i].title,
-        tip: arr[i].tip,
-        time: arr[i].time
-      })) succ++
+      if (app.addNote({
+          classname: classname,
+          title: arr[i].title,
+          tip: arr[i].tip,
+          time: arr[i].time,
+          autosave: false
+        })) succ++
     }
+    app.saveClass({
+      name: classname,
+      data: g.class[classname]
+    })
     wx.hideLoading({
       success: (res) => {},
     })
@@ -50,6 +83,7 @@ App({
   transFromApp(str) {
     var succ = 0,
       fail = 0;
+    str = str.replace(/\\n/g, "\n")
     var lc = str.indexOf("/c<"),
       rc, li, ri, lt, rt, arr = []
     while (lc != -1) {
@@ -98,7 +132,12 @@ App({
     g = app.globalData
     f = app.f
     this.InitCloud()
-    this.getOpenid(console.log)
+    this.getOpenid(this.getCloudSet)
+    
+  },
+  getCloudSet(){
+    //暂无
+    
   },
   /**
    * 初始化云开发环境（支持环境共享和正常两种模式）
@@ -527,11 +566,13 @@ App({
     bottom,
     color,
     extStyleClass,
-    time
+    time,
+    autosave
   }) { //自动保存，默认加在顶部
     //if(classname != DEFAULTCLASSNAME){
     //  this.changeNote(DEFAULTCLASSNAME,name,"time",f.getTime())
     //}
+    if (typeof autosave != 'boolean') autosave = true
     if (!ORALDATA)
       if (typeof title != 'string' || title.replace(/ /g, '') == '') {
         wx.showModal({
@@ -577,10 +618,11 @@ App({
     if (bottom) tar.push(t)
     else tar.unshift(t)
     console.log("add note:", classname, t, g.class)
-    this.saveClass({
-      name: classname,
-      data: tar,
-    })
+    if (autosave)
+      this.saveClass({
+        name: classname,
+        data: tar,
+      })
     if (classname == DEFAULTCLASSNAME && title != DEFAULTCLASSNAME) { //新建分类
       g.class[title] = []
       this.saveClass({
@@ -616,12 +658,13 @@ App({
     return Object.keys(classlist);
   },
   importHelp(classname) {
-    if(classname == g.DEFAULTCLASSNAME) return
+    if (classname == g.DEFAULTCLASSNAME) return
     app.addNote({
       classname: classname,
       title: '欢迎使用《Memory》',
       tip: '本小程序复刻自Android版Memory应用，在此，您可以记录下您需要记忆的项目，使用本应用辅助记忆',
       bottom: true,
+      autosave: false
       //extStyleClass: 'iconfont icon-biaoji'
     })
     app.addNote({
@@ -629,6 +672,7 @@ App({
       title: '我们将用一个例子展现本应用的功能，你还记得这个单词是什么意思吗?\naddress v.[致函] n.[地址]\n',
       tip: '现在，尝试点击一下本项，然后再点击一次。\n将"["和"]"加入到项目中可以使用此效果',
       bottom: true,
+      autosave: false
       //extStyleClass: 'iconfont icon-biaoji'
     })
     app.addNote({
@@ -636,6 +680,7 @@ App({
       title: '再试试?\nqualification n.[资格，条件]',
       tip: '',
       bottom: true,
+      autosave: false
       //extStyleClass: 'iconfont icon-biaoji'
     })
     app.addNote({
@@ -643,14 +688,16 @@ App({
       title: '查看所有 [view]',
       tip: '点击左上方这个图标可以将您需要遮盖的文本全部展现出来',
       bottom: true,
-      extStyleClass: 'icon-chakan'
+      extStyleClass: 'icon-chakan',
+      autosave: false
     })
     app.addNote({
       classname: classname,
       title: '刷新 [refresh]',
       tip: '点击左上方这个图标可以将您需要遮盖的文本重置，交替使用以上两个按钮可以看到显著效果',
       bottom: true,
-      extStyleClass: 'icon-shuaxin'
+      extStyleClass: 'icon-shuaxin',
+      autosave: false
     })
 
     app.addNote({
@@ -658,14 +705,16 @@ App({
       title: '删除项目',
       tip: '左滑本项目，轻触该图标，即可本项即移动到“已删除”分类',
       bottom: true,
-      extStyleClass: 'icon-shanchu'
+      extStyleClass: 'icon-shanchu',
+      autosave: false
     })
     app.addNote({
       classname: classname,
       title: '彻底删除项目',
       tip: '在“已删除”分类中左滑项目，轻触该图标，即可永久删除项目',
       bottom: true,
-      extStyleClass: 'icon-shanchu'
+      extStyleClass: 'icon-shanchu',
+      autosave: false
     })
     app.addNote({
       classname: classname,
@@ -673,7 +722,8 @@ App({
       title: '显示/隐藏提示',
       bottom: true,
       color: '#44cef6',
-      extStyleClass: 'icon-tishi'
+      extStyleClass: 'icon-tishi',
+      autosave: false
     })
     app.addNote({
       classname: classname,
@@ -681,7 +731,8 @@ App({
       title: '显示/隐藏时间',
       bottom: true,
       color: '#44cef6',
-      extStyleClass: 'icon-shijian'
+      extStyleClass: 'icon-shijian',
+      autosave: false
     })
     app.addNote({
       classname: classname,
@@ -689,7 +740,8 @@ App({
       tip: '',
       bottom: true,
       color: '#0c8918',
-      extStyleClass: 'icon-tishi'
+      extStyleClass: 'icon-tishi',
+      autosave: false
     })
     app.addNote({
       classname: classname,
@@ -697,21 +749,24 @@ App({
       title: '标记项目',
       bottom: true,
       color: '#dc3023',
-      extStyleClass: 'icon-biaoji'
+      extStyleClass: 'icon-biaoji',
+      autosave: false
     })
     app.addNote({
       classname: classname,
       tip: '在标记模式中，点击右侧按钮可以标记项目，上方可以选择标记颜色，再次点击标记按钮可以取消标记',
       title: '试试标记此项目',
       bottom: true,
-      extStyleClass: 'icon-biaoji'
+      extStyleClass: 'icon-biaoji',
+      autosave: false
     })
     app.addNote({
       classname: classname,
       tip: '点击保存按钮可以退出标记模式，并保存列表',
       title: '保存标记',
       bottom: true,
-      extStyleClass: 'icon-baocun'
+      extStyleClass: 'icon-baocun',
+      autosave: false
     })
     app.addNote({
       classname: classname,
@@ -719,7 +774,8 @@ App({
       title: '请点击保存退出标记模式',
       bottom: true,
       color: '#0c8918',
-      extStyleClass: 'icon-baocun'
+      extStyleClass: 'icon-baocun',
+      autosave: false
     })
     app.addNote({
       classname: classname,
@@ -727,14 +783,16 @@ App({
       title: '编辑列表',
       bottom: true,
       color: '#dc3023',
-      extStyleClass: 'icon-icon-'
+      extStyleClass: 'icon-icon-',
+      autosave: false
     })
     app.addNote({
       classname: classname,
       tip: '进入编辑模式后，右上角工具栏将显示可用工具，您可以点击对应工具，左侧将显示它的功用，然后点击每条项目旁边的按钮，可以执行对应的操作',
       title: '编辑模式指引',
       bottom: true,
-      extStyleClass: 'icon-icon-'
+      extStyleClass: 'icon-icon-',
+      autosave: false
     })
     app.addNote({
       classname: classname,
@@ -742,7 +800,8 @@ App({
       title: '请点击保存退出编辑模式',
       bottom: true,
       color: '#0c8918',
-      extStyleClass: 'icon-baocun'
+      extStyleClass: 'icon-baocun',
+      autosave: false
     })
     app.addNote({
       classname: classname,
@@ -750,21 +809,24 @@ App({
       title: '编辑项目',
       color: '#dc3023',
       bottom: true,
-      extStyleClass: 'icon-bianji'
+      extStyleClass: 'icon-bianji',
+      autosave: false
     })
     app.addNote({
       classname: classname,
       tip: '点击下方正中心的添加图标，可以添加项目',
       title: '添加项目',
       bottom: true,
-      extStyleClass: 'icon-tianjia'
+      extStyleClass: 'icon-tianjia',
+      autosave: false
     })
     app.addNote({
       classname: classname,
       tip: '长按下方正中心的添加图标，可以从词典快速添加项目',
       title: '从词典快速添加项目',
       bottom: true,
-      extStyleClass: 'icon-tianjia'
+      extStyleClass: 'icon-tianjia',
+      autosave: false
     })
     app.addNote({
       classname: classname,
@@ -772,28 +834,48 @@ App({
       title: '管理分类',
       color: '#dc3023',
       bottom: true,
-      extStyleClass: 'icon-fenlei'
+      extStyleClass: 'icon-fenlei',
+      autosave: false
     })
     app.addNote({
       classname: classname,
       tip: '在“管理分类”中点击或长按下方正中心的添加图标，可以(快速)添加分类',
       title: '添加分类',
       bottom: true,
-      extStyleClass: 'icon-tianjia'
+      extStyleClass: 'icon-tianjia',
+      autosave: false
     })
     app.addNote({
       classname: classname,
       tip: '点击该图标可以导入所有帮助条目至当前所在分类',
       title: '随时查看帮助',
       bottom: true,
-      extStyleClass: 'icon-bangzhu'
+      extStyleClass: 'icon-bangzhu',
+      autosave: false
     })
     app.addNote({
       classname: classname,
       tip: '长按该图标可以导入示例至当前所在分类',
       title: '导入示例',
       bottom: true,
-      extStyleClass: 'icon-bangzhu'
+      extStyleClass: 'icon-bangzhu',
+      autosave: false
+    })
+    app.addNote({
+      classname: classname,
+      tip: '点击该图标可以将当前分类导出为文本',
+      title: '导出数据',
+      bottom: true,
+      extStyleClass: 'icon-daochu',
+      autosave: false
+    })
+    app.addNote({
+      classname: classname,
+      tip: '点击该图标可以将导出的数据导入当前分类',
+      title: '导入数据',
+      bottom: true,
+      extStyleClass: 'icon-daoru',
+      autosave: true
     })
   },
   listNameVaild(list, newname) {

@@ -1,0 +1,27 @@
+<!--pages/mine.wxml-->
+<view class="page">
+  <image class="logoimg" mode="aspectFit" src="../../images/logo.png"></image>
+  <view class="britanic title">Memory</view>
+  <view class="text">{{VERSION.ver}}</view>
+  <view class="textcell" style="background-color: #dddddd;">{{VERSION.text}}</view>
+  <view class="cloudcell" style="background-color: #EEEEEE;">
+    <view class="iconfont icon-yunduanshuaxin cloudicon"></view>
+    <view class="cloudinfo">
+      <view class="text">用户ID:{{OPENID}}</view>
+      <view class="text">云端同步功能正在建设中...</view>
+    </view>
+  </view>
+  <view class="cell" style="background-color: #EEEEEE;">
+    <view class="cellline head">
+      <view>正在建设的功能</view>
+    </view>
+    <view class="cellline" wx:for="{{appset.funs}}">
+      <view>{{item}}</view>
+      <view style="display: flex;">
+        <view class="dianzanshu">{{appset.likefun[item].length}}</view>
+        <view class="likeIcon iconfont icon-dianzan{{funsLiked[item]?'1':''}}" data-id="{{item}}" bindtap="likeFun"></view>
+      </view>
+    </view>
+  </view>
+  
+</view>

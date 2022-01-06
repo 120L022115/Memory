@@ -87,6 +87,89 @@ Page({
           }
         })
       }
+    }else if(id=='import'){
+      if(thisclass == g.DEFAULTCLASSNAME){
+        wx.showModal({
+          title: '导入失败',
+          content: '不能在当前分类导入',
+          showCancel:false
+        })
+        return
+      }
+      wx.showModal({
+        title: '导入数据',
+        content: '是否要导入至此分类？',
+        confirmText: '输入数据',
+        success(res) {
+          if (res.confirm) {
+            wx.showModal({
+              title: '导入数据',
+              editable: true,
+              placeholderText:'输入需要导入的数据',
+              confirmText: '开始导入',
+              success(r){
+                if(r.confirm){
+                  wx.showLoading({
+                    title: '正在导入',
+                    success(res){
+                      var su = app.transFromApp(r.content)
+                      su = app.importFromArr(thisclass, su.arr)
+                      wx.showToast({
+                        title: '导入'+su+'条',
+                      })
+                      that.updateNoteArea(false)
+                    }
+                  })
+                  
+                }
+              }
+            })
+          }
+        }
+      })
+    }else if(id=='export'){
+      if(thisclass == g.DEFAULTCLASSNAME){
+        wx.showModal({
+          title: '导出失败',
+          content: '不能导出当前分类',
+          showCancel:false
+        })
+        return
+      }
+      wx.showModal({
+        title: '导出数据',
+        content: '是否要导出此分类？\n导出只能导出标题、提示和时间\n导出后需要复制导出的文本',
+        confirmText: '导出本类',
+        success(res) {
+          if (res.confirm) {
+            wx.showLoading({
+              title: '正在导出',
+              success(res){
+                var su = app.exportClass(thisclass)
+                wx.hideLoading({
+                  success: (res) => {},
+                })
+                wx.showModal({
+                  title: '导出数据',
+                  content: '导出完成，您可以点击复制',
+                  confirmText: '复制',
+                  success(r){
+                    if(r.confirm){
+                      wx.setClipboardData({
+                        data: su,
+                        tip: '数据已复制'
+                      })
+                      
+                    }
+                  }
+                })
+              }
+            })
+
+            
+          }
+        }
+      })
     }
   },
   wordQuery(e) {
@@ -191,7 +274,7 @@ Page({
     g = app.globalData
     f = app.f
     var that = this
-
+    
     wx.getStorage({
       key: 'SETTIME',
       success(res) {
@@ -231,6 +314,13 @@ Page({
       that.data.goExAdd = false
       this.updateNoteArea(that.data.classNameList[that.data.classIdSelected] == g.DEFAULTCLASSNAME)
     }
+    /*setTimeout(() => {
+      wx.navigateTo({
+        url: '../mine/mine',
+      })  
+    }, 500);
+    */
+
     /*
     // 通过云函数调用获取用户 _openId
     //getApp().getOpenId()
@@ -276,6 +366,9 @@ Page({
     console.log('UPDATE', refresh)
     if (refresh) {
       //重置显示文本
+      wx.showLoading({
+        title: '加载中',
+      })
       if (thisclass == g.DEFAULTCLASSNAME) {
         that.data.classNameList = app.ArrayTransToNameList(g.class[g.DEFAULTCLASSNAME])
 
@@ -728,11 +821,15 @@ Page({
         showCancel: false
       })
     } else if (id == 'wode') {
+      wx.navigateTo({
+        url: '../mine/mine',
+      })  
+      /*
       wx.showModal({
         title: '我的',
         content: '我的正在建设中',
         showCancel: false
-      })
+      })*/
     }
   },
   toAddPage() {

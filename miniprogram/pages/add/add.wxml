@@ -14,7 +14,7 @@
     <block wx:if="{{wordlist.length > 0}}">
       <scroll-view scroll-y="true" style="margin-top: 1vw;font-size: 4vw;max-height: 70vh">
         <view class="TABLE2" style="padding: 0;color: black;">
-          <view wx:for="{{wordlist}}" wx:key="{{item.value}}">
+          <view wx:for="{{wordlist}}" wx:key="word">
             <view class="FORMitem FORMline" style="width: 85vw;background-color:{{wordChoose==index?'#88ada6':(index%2==0?'#e3f9fd':'#d6ecf0')}};justify-content:space-between;padding-left:1vw;padding-right:1vw;margin-top:2px;margin-bottom:0px" bindtap="wordQuery" data-index="{{index}}" id="choose">
               <view class="TABLE2block tabletext" style="color:{{wordChoose==index?'black':'black'}} !important">{{item.word}}</view>
               <view class="TABLE2block tabletext" style="color:{{wordChoose==index?'black':'black'}} !important">{{item.tranall}}</view>

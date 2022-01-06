@@ -1,0 +1,116 @@
+/* pages/mine.wxss */
+@import '../../icon/BRITANIC.wxss';
+
+.page {
+  padding: 2vw;
+  width: 96vw;
+  display: block;
+  justify-items: center;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.logoimg {
+  margin-top: 5vw;
+  width: 30vw;
+  height: 30vw;
+}
+
+.title {
+  margin-top: 2vw;
+  font-size: 8vw;
+}
+
+.text {
+  font-size: 4vw;
+  white-space: pre;
+  overflow: scroll;
+}
+
+.textcell {
+  margin: 5vw auto 0 auto;
+  width: 80%;
+  text-align: left;
+  font-size: 4vw;
+  border-radius: 3vw;
+  height: 20vw;
+  white-space: pre-wrap;
+  padding: 4vw;
+  overflow-y: scroll;
+}
+
+.cloudcell {
+  margin: 5vw auto 0 auto;
+  width: 80%;
+  text-align: left;
+  font-size: 4vw;
+  border-radius: 3vw;
+  padding: 4vw;
+  display: flex;
+  align-items: center;
+}
+
+.cloudicon {
+  margin-left: 0vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 10vw;
+  background-color: #DDDDDD;
+  border-radius: 20vw;
+  width: 15vw;
+  min-width: 15vw;
+  height: 15vw;
+}
+
+.cloudinfo {
+  margin: 0 5vw 0 5vw;
+  width: 55vw;
+}
+
+.likeIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 6vw;
+  background-color: #DDDDDD;
+  border-radius: 20vw;
+  width: 10vw;
+  min-width: 10vw;
+  height: 10vw;
+}
+
+.cell {
+  margin: 5vw auto 0 auto;
+  width: 80%;
+  text-align: left;
+  font-size: 4vw;
+  border-radius: 3vw;
+  padding: 2vw 4vw;
+  align-items: center;
+}
+
+.cellline {
+  display: flex;
+  padding: 1vw 0;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  margin: 1vw 0;
+}
+
+.cellline.head {
+  border-bottom: 1px solid #dddddd;
+}
+
+.dianzanshu{
+  display: flex;
+  padding: 0 2vw;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 0;
+}

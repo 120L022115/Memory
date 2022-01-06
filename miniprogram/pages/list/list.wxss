@@ -126,6 +126,7 @@ page{
 
 .toolicon{
   font-size: 6vw;margin-right: 2vw;
+  align-items: center;display: flex;
 }
 
 .topbar{
